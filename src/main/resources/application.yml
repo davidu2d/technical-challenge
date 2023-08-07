@@ -4,6 +4,8 @@ server:
     context-path: /api
 
 spring:
+  main:
+    allow-circular-references: true
   application:
     name: technical-challenge
   profiles:
@@ -29,3 +31,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:my-secret-key}
