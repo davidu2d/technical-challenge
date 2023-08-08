@@ -13,8 +13,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,8 +33,8 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public Page<Vehicle> findAll(Pageable pageable) {
-        return this.vehicleRepository.findAll(pageable);
+    public Page<Vehicle> findAll(String name, String brand, Integer yearInitial, Integer yearFinal, BigDecimal priceInitial, BigDecimal priceFinal, Pageable pageable) {
+        return this.vehicleRepository.findByNameAndBrandAndYearAndPrice(name, brand, yearInitial, yearFinal, priceInitial, priceFinal, pageable);
     }
 
     @Override

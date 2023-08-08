@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("vehicles")
 @RequiredArgsConstructor
@@ -20,9 +22,15 @@ public class VehicleController {
     private final VehicleService vehicleService;
 
     @GetMapping
-    public ResponseEntity findAll(@RequestParam(required = false, defaultValue = "0") int page,
-                                  @RequestParam(required = false, defaultValue = "5") int size){
-        var vehicles = this.vehicleService.findAll(PageRequest.of(page, size));
+    public ResponseEntity findAll(@RequestParam(required = false, defaultValue = "1") int page,
+                                  @RequestParam(required = false, defaultValue = "5") int size,
+                                  @RequestParam(required = false) String name,
+                                  @RequestParam(required = false) String brand,
+                                  @RequestParam(required = false) Integer yearInitial,
+                                  @RequestParam(required = false) Integer yearFinal,
+                                  @RequestParam(required = false) BigDecimal priceInitial,
+                                  @RequestParam(required = false)BigDecimal priceFinal){
+        var vehicles = this.vehicleService.findAll(name, brand, yearInitial, yearFinal, priceInitial, priceFinal, PageRequest.of((page - 1), size));
         return ResponseEntity.ok(vehicles);
     }
 
