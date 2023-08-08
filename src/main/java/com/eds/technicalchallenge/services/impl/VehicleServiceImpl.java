@@ -1,9 +1,7 @@
 package com.eds.technicalchallenge.services.impl;
 
 import com.eds.technicalchallenge.domain.vehicle.Vehicle;
-import com.eds.technicalchallenge.exceptions.ResourceNotFoundException;
-import com.eds.technicalchallenge.exceptions.VehicleWithInvalidYearException;
-import com.eds.technicalchallenge.exceptions.VehicleWithSameChassisException;
+import com.eds.technicalchallenge.exceptions.*;
 import com.eds.technicalchallenge.repositories.VehicleRepository;
 import com.eds.technicalchallenge.services.VehicleService;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +25,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public Vehicle create(Vehicle vehicle) {
-        validateVehicleWithSameChassis(vehicle.getChassis());
-        validateVehicleWithYearGreaterThanCurrentYear(vehicle.getYear());
+        validationCreate(vehicle);
         return this.vehicleRepository.save(vehicle);
     }
 
@@ -52,6 +49,7 @@ public class VehicleServiceImpl implements VehicleService {
         recoveredVehicle.setId(id);
         recoveredVehicle.setCreated(dateCreated);
         recoveredVehicle.setUpdated(LocalDateTime.now());
+        validationUpdate(recoveredVehicle);
         this.vehicleRepository.save(recoveredVehicle);
     }
 
@@ -69,13 +67,32 @@ public class VehicleServiceImpl implements VehicleService {
         this.vehicleRepository.save(vehicle);
     }
 
-    private void validateVehicleWithSameChassis(String chassis){
+    private void validateVehicleWithSameChassis(String chassis, Notification notification){
         var vehicle = vehicleRepository.findByChassis(chassis);
-        if (vehicle.isPresent()) throw new VehicleWithSameChassisException();
+        if (vehicle.isPresent()) notification.addError("Vehicle already exists with this chassis number!");
     }
 
-    private void validateVehicleWithYearGreaterThanCurrentYear(int year){
+    private void validateVehicleWithYearGreaterThanCurrentYear(int year, Notification notification){
         var today = LocalDate.now();
-        if (year > today.getYear()) throw new VehicleWithInvalidYearException();
+        if (year > today.getYear()) notification.addError("Vehicle year greater than current year!");
+    }
+
+    private void validateVehicleWithNegativePrice(BigDecimal price, Notification notification){
+        if (price.signum() == -1) notification.addError("Vehicle with negative price");
+    }
+
+    private void validationCreate(Vehicle vehicle){
+        var notification = new Notification();
+        validateVehicleWithSameChassis(vehicle.getChassis(), notification);
+        validateVehicleWithYearGreaterThanCurrentYear(vehicle.getYear(), notification);
+        validateVehicleWithNegativePrice(vehicle.getPrice(), notification);
+        if (notification.hasErrors()) throw new NotificationsException(notification.errorMessage());
+    }
+
+    private void validationUpdate(Vehicle vehicle){
+        var notification = new Notification();
+        validateVehicleWithYearGreaterThanCurrentYear(vehicle.getYear(), notification);
+        validateVehicleWithNegativePrice(vehicle.getPrice(), notification);
+        if (notification.hasErrors()) throw new NotificationsException(notification.errorMessage());
     }
 }

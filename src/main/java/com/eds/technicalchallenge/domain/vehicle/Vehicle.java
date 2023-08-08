@@ -47,11 +47,6 @@ public class Vehicle {
     @Column(name = "updated")
     private LocalDateTime updated;
 
-    public void setPrice(BigDecimal price){
-        if (price.signum() == -1)
-            this.price = BigDecimal.ZERO;
-    }
-
     public Vehicle(String name, String brand, Integer year, String description, boolean isSold, LocalDateTime created, String chassis, BigDecimal price) {
         this.name = name;
         this.brand = brand;
@@ -60,7 +55,7 @@ public class Vehicle {
         this.isSold = isSold;
         this.created = created;
         this.chassis = chassis;
-        this.price = price.signum() == -1 ? BigDecimal.ZERO : price;
+        this.price = price;
     }
 
     public Vehicle(String name, String brand, Integer year, String description, boolean isSold, String chassis, BigDecimal price) {
@@ -69,8 +64,7 @@ public class Vehicle {
         this.year = year;
         this.description = description;
         this.isSold = isSold;
-        this.created = created;
         this.chassis = chassis;
-        this.price = price.signum() == -1 ? BigDecimal.ZERO : price;
+        this.price = price;
     }
 }
