@@ -9,8 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.eds</groupId>
-	<artifactId>desafio-tecnico</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>technical-challenge</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>technical-challenge</name>
 	<description>Projeto demo do desafio técnico</description>
 	<properties>
@@ -94,6 +94,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>technical-challenge</finalName>
 	</build>
 
 </project>
