@@ -64,8 +64,4 @@ public class VehicleCustomRepositoryImpl implements VehicleCustomRepository {
         query.setMaxResults(pageable.getPageSize());
         return new PageImpl<>(query.getResultList(), pageable, size);
     }
-
-    private boolean isInteger(String str) {
-        return str != null && str.matches("[0-9]*");
-    }
 }

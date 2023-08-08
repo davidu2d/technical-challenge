@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = ConstraintNotXss.class)
 public @interface NotXss {
-    String message() default "O tipo pode conter apenas caracteres alfanuméricos";
+    String message() default "Type can only contain alphanumeric characters";
 
     Class<?>[] groups() default {};
 
