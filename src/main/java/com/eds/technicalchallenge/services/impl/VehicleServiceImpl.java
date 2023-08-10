@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void update(Long id, Vehicle vehicle) {
+    public Vehicle update(Long id, Vehicle vehicle) {
         var recoveredVehicle = this.findById(id);
         var dateCreated = recoveredVehicle.getCreated();
         BeanUtils.copyProperties(vehicle, recoveredVehicle);
@@ -50,7 +49,7 @@ public class VehicleServiceImpl implements VehicleService {
         recoveredVehicle.setCreated(dateCreated);
         recoveredVehicle.setUpdated(LocalDateTime.now());
         validationUpdate(recoveredVehicle);
-        this.vehicleRepository.save(recoveredVehicle);
+        return this.vehicleRepository.save(recoveredVehicle);
     }
 
     @Override

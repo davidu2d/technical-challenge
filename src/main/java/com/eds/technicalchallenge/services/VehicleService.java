@@ -11,7 +11,7 @@ public interface VehicleService {
     Vehicle create(Vehicle vehicle);
     Page<Vehicle> findAll(String name, String brand, Integer yearInitial, Integer yearFinal, BigDecimal priceInitial, BigDecimal priceFinal, Pageable pageable);
     Vehicle findById(Long id);
-    void update(Long id, Vehicle vehicle);
+    Vehicle update(Long id, Vehicle vehicle);
     void delete(Long id);
     void sell(Long id);
 }
