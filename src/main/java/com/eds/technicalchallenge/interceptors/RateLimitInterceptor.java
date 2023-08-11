@@ -1,5 +1,7 @@
 package com.eds.technicalchallenge.interceptors;
 
+import com.eds.technicalchallenge.exceptions.ApiKeyNotFoundException;
+import com.eds.technicalchallenge.exceptions.RateLimitException;
 import com.eds.technicalchallenge.infra.ratelimit.RateLimitProperties;
 import com.eds.technicalchallenge.services.impl.RateLimitService;
 import io.github.bucket4j.Bucket;
@@ -31,8 +33,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         if (rateLimitProperties.isEnabled()) {
             String apiKey = request.getHeader("X-api-key");
             if (apiKey == null || apiKey.isEmpty()) {
-                response.sendError(HttpStatus.BAD_REQUEST.value(), "Missing Header: X-api-key");
-                return false;
+                throw new ApiKeyNotFoundException();
             }
             Bucket tokenBucket = rateLimitService.getBucket(apiKey);
             ConsumptionProbe probe = tokenBucket.tryConsumeAndReturnRemaining(1);
@@ -41,9 +42,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
                 return true;
             } else {
                 response.addHeader("X-Rate-Limit-Retry-After-Seconds", String.valueOf(TimeUnit.NANOSECONDS.toSeconds(probe.getNanosToWaitForRefill())));
-                response.sendError(HttpStatus.TOO_MANY_REQUESTS.value(),
-                        "You have exhausted your API Request Quota");
-                return false;
+                throw new RateLimitException();
             }
         } else {
             return true;

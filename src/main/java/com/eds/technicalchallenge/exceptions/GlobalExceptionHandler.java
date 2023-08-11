@@ -37,4 +37,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setProperty("timeStamp", Instant.now());
         return problemDetail;
     }
+
+    @ExceptionHandler(ApiKeyNotFoundException.class)
+    ProblemDetail apiKeyNotFoundException(ApiKeyNotFoundException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getLocalizedMessage());
+        problemDetail.setTitle("Api Key error");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setProperty("timeStamp", Instant.now());
+        return problemDetail;
+    }
+
+    @ExceptionHandler(RateLimitException.class)
+    ProblemDetail rateLimitException(RateLimitException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.TOO_MANY_REQUESTS, e.getLocalizedMessage());
+        problemDetail.setTitle("Rate Limit error");
+        problemDetail.setDetail(e.getMessage());
+        problemDetail.setProperty("timeStamp", Instant.now());
+        return problemDetail;
+    }
 }

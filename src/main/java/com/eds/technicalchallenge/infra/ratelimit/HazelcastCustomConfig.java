@@ -39,7 +39,7 @@ public class HazelcastCustomConfig {
     @Bean
     public NetworkConfig networkConfig() {
         NetworkConfig networkConfig = new NetworkConfig();
-        networkConfig.setPort(8082);
+        networkConfig.setPort(8081);
         networkConfig.setPortCount(1);
         networkConfig.setPortAutoIncrement(false);
         networkConfig.setJoin(joinConfig());
